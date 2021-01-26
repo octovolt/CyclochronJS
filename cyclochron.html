@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Cyclochron</title>
+        <meta name="description" content="Circular MIDI Sequencer">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="cyclochron.css">
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div id="layoutContainer">
+            <div id="graphicsContainer">
+                <div id="cycle">
+                    <div id="firstBeatIndicatorContainer">
+                        <div id="firstBeatIndicator"></div>
+                    </div>
+                    <div id="symmetry"></div>
+                    <div id="crossSymmetry"></div>
+                </div>
+            </div>
+            <form id="configurationContainer">
+                <h1>Cyclochron</h1>
+                <fieldset>
+                    <h3>Sequencer</h2>
+                    <div>
+                        <label>Beats</label>
+                        <input name="beats" id="beats" type="text" value="16" />
+                    </div>
+                    <div>
+                        <label>BPM</label>
+                        <input name="bpm" id="bpm" type="text" value="120" />
+                    </div>
+                    <div>
+                        <label>Note Number</label>
+                        <input name="noteNumber" id="noteNumber" type="text" value="60" />
+                    </div>
+                    <div>
+                        <label>MIDI Channel</label>
+                        <select name="midiChannel" id="midiChannel">
+                            <option value="1" selected=true>1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                            <option value="13">13</option>
+                            <option value="14">14</option>
+                            <option value="15">15</option>
+                            <option value="16">16</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>MIDI Device</label>
+                        <select name="midiOutputPort" id="midiOutputPort">
+                            <option>NONE</option>
+                        </select>
+                    </div>
+                    <div class="buttonGroup">
+                        <button id="startButton">START</button>
+                        <button id="stopButton">STOP</button>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <h3>Rhythm Generator</h2>
+                    <div>
+                        <label>Max Rests</label>
+                        <select name="maxRests" id="maxRests">
+                            <option value="1">1</option>
+                            <option value="2" selected=true>2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Max Repeats</label>
+                        <select name="maxRepeats" id="maxRepeats">
+                            <option value="0">0</option>
+                            <option value="1" selected=true>1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Allow Offbeat Symmetry</label>
+                        <input type="checkbox" name="offbeatSymmetry" id="offbeatSymmetry" checked="true" />
+                    </div>
+                    <div class="buttonGroup">
+                        <button id="generateButton">GENERATE</button>
+                        <button id="clearButton">CLEAR</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        
+        <script src="cyclochron.js" async defer></script>
+    </body>
+</html>

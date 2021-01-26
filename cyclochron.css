@@ -1,0 +1,189 @@
+html, body {
+    height:100%;
+}
+
+body {
+    background-color:black;
+    color:white;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3, h4, h5 {
+    margin:0;
+    padding:0;
+}
+
+form, button, fieldset {
+    display:block;
+}
+
+input {
+    max-width: 40px;
+}
+
+label {
+    display: inline-block;
+    padding-top:10px;
+    width:3em;
+}
+
+label.disabled {
+    color:gray;
+}
+
+fieldset {
+    margin:0;
+    padding:0;
+    border:none;
+    margin-top:50px;
+}
+
+fieldset label {
+    width:7em;
+}
+
+button {
+    margin-top:20px;
+}
+
+.buttonGroup button {
+    display:inline-block;
+}
+
+#layoutContainer {
+    height:100%;
+    width:100%;
+    flex-grow:true;
+    flex-direction:row-reverse;
+    display:flex;
+}
+
+#configurationContainer {
+    padding:50px;
+    width:300px;
+    flex-grow:false;
+}
+
+#graphicsContainer {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-grow:true;
+    width:100%;
+}
+
+#cycle {
+    border-color:red;
+    border-style:solid;
+    border-width:10px;
+    border-radius:50%;
+    position:relative;
+    height:500px;
+    width:500px;
+}
+
+#crossSymmetry {
+    box-sizing: border-box;
+    border-color:green;
+    border-top-width:1px;
+    border-right-width:0px;
+    border-left-width:0px;
+    border-bottom-width:0px;
+    border-style:dashed;
+    width:140%;
+    height:1px;
+    position:absolute;
+    top:50%;
+    left:-20%;
+    /*z-index:9998;*/
+}
+
+#symmetry {
+    box-sizing: border-box;
+    border-color:yellow;
+    border-top-width:0px;
+    border-right-width:1px;
+    border-left-width:0px;
+    border-bottom-width:0px;
+    border-style:dashed;
+    height:140%;
+    width:1px;
+    position:absolute;
+    top:-20%;
+    left:50%;
+    /*z-index:9999;*/
+}
+
+.beat {
+    width:10px;
+    height:calc(50% + 20px);
+    position:absolute;
+    top:calc(25% - 10px);
+    left:calc(50% - 5px);
+    border-radius:5px;
+}
+
+.beatActive {
+    background-color:gray;
+}
+
+.beatMarker {
+    background-color:red;
+    height:20px;
+    width:100%;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+}
+
+.beatActive.playing, .beatMarker.playing {
+    background-color:white;
+}
+
+#firstBeatIndicatorContainer {
+    width:10px;
+    height:calc(50% + 60px);
+    position:absolute;
+    top:calc(25% - 30px);
+    left:calc(50% - 5px);
+    transform:translateY(-50%);
+}
+
+#firstBeatIndicator {
+    background-color:white;
+    border-radius:50%;
+    width:10px;
+    height:10px;
+}
+
+@media (max-width:900px) {
+    #layoutContainer {
+        flex-direction:column;
+    }
+    #graphicsContainer {
+        padding-top:50px;
+    }
+}
+
+@media (max-width:600px) {
+    #graphicsContainer {
+        padding-top:30px;
+    }
+    #configurationContainer {
+        padding:10px;
+    }
+    #cycle {
+        height:250px;
+        width:250px;
+    }
+}
+
+@media (max-width:300px) {
+    #configurationContainer {
+        padding-left:5px;
+        padding-right:5px;
+    }
+    #cycle {
+        height:100px;
+        width:100px;
+    }
+}
