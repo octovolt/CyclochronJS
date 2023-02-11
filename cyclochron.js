@@ -937,7 +937,8 @@
   }
 
   function handleCyclePointerDown(e) {
-    if (e.path.includes(state.cycleElement)) {
+    var path = e.composedPath();
+    if (path.includes(state.cycleElement)) {
       return;
     }
     let radians = Math.atan2(e.y - state.centerY, e.x - state.centerX);
@@ -947,7 +948,8 @@
  
   function handleCyclePointerMove(e) {
     if (state.pointerDown && state.animationFrameAvailable) {
-      if (e.path.includes(state.cycleElement)) {
+      var path = e.composedPath();
+      if (path.includes(state.cycleElement)) {
         return;
       }
       state.animationFrameAvailable = false;
