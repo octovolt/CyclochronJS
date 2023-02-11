@@ -121,8 +121,8 @@
    * Thus a 16-step cycle is assumed to be one measure long.
    */
   function getBeatLength() {
-    let minute = 60 * 1000;
-    let quarterNoteDuration = minute / state.bpm;
+    const minute = 60 * 1000;
+    const quarterNoteDuration = minute / state.bpm;
     return Math.floor(quarterNoteDuration / 4);
   }
 
@@ -149,7 +149,7 @@
       return false;
     }
 
-    let beatCountDiff = beatCount - state.beats.length;
+    const beatCountDiff = beatCount - state.beats.length;
     if (beatCountDiff === 0) {
       // no op
       return false;
@@ -157,8 +157,8 @@
 
     if (beatCountDiff < 0) {
       // too many beats, so cache the ones we don't need so we can get them back later
-      let idx = state.beats.length - (beatCountDiff * -1);
-      let removedBeats = state.beats.splice(idx);
+      const idx = state.beats.length - (beatCountDiff * -1);
+      const removedBeats = state.beats.splice(idx);
       state.cachedBeats = removedBeats.concat(state.cachedBeats);
 
     } else { 
@@ -166,8 +166,8 @@
       if (state.cachedBeats.length === 0) {
         addBeats(beatCountDiff);
       } else {
-        let newBeatsToAdd = beatCountDiff - state.cachedBeats.length;
-        let removedCachedBeats = state.cachedBeats.splice(0, Math.max(beatCountDiff, 0));
+        const newBeatsToAdd = beatCountDiff - state.cachedBeats.length;
+        const removedCachedBeats = state.cachedBeats.splice(0, Math.max(beatCountDiff, 0));
         state.beats = state.beats.concat(removedCachedBeats);
         if (newBeatsToAdd > 0) {
           addBeats(newBeatsToAdd);
@@ -203,8 +203,8 @@
   }
 
   function updateCenterCoordinates() {
-    let cycle = document.getElementById('cycle');
-    let cycleRect = cycle.getBoundingClientRect();
+    const cycle = document.getElementById('cycle');
+    const cycleRect = cycle.getBoundingClientRect();
     state.centerX = (cycleRect.left + cycleRect.right) / 2;
     state.centerY = (cycleRect.top + cycleRect.bottom) / 2;
   }
@@ -217,14 +217,14 @@
   }
 
   function updateCycleRotationStateWithPointerData(pointerX, pointerY) {
-    let lastDegrees = state.degrees;
-    let radians = Math.atan2(pointerY - state.centerY, pointerX - state.centerX);
+    const lastDegrees = state.degrees;
+    const radians = Math.atan2(pointerY - state.centerY, pointerX - state.centerX);
 
     state.degrees = radians * (180 / Math.PI);
     state.degreeDelta = lastDegrees ? state.degrees - lastDegrees : 0;
     state.rotationDegrees += state.degreeDelta;
 
-    let beatDegrees = 360 / state.beats.length;
+    const beatDegrees = 360 / state.beats.length;
     if (state.rotationDegrees > state.snapDegrees + (beatDegrees / 2)) {
       // cycle circle is stepping forward clockwise by a beat,
       // thus the firstBeatIndex is stepping back by a beat.
@@ -263,10 +263,10 @@
   }
 
   function updateCycleRotationStateForFlippedCycle() {
-    let currentBeatIndex = state.currentBeatIndex + state.beats.length / 2;
-    if (currentBeatIndex > state.beats.length - 1) {
-      currentBeatIndex -= state.beats.length;
-    }
+    const idx = state.currentBeatIndex + state.beats.length / 2;
+    const currentBeatIndex = idx > state.beats.length - 1
+      ? currentBeatIndex -= state.beats.length
+      : idx;
     state.currentBeatIndex = currentBeatIndex;
 
     state.firstBeatIndex += state.beats.length / 2;
@@ -323,9 +323,9 @@
           }
         }
       } else {
-        let previousIndex = idx + 1;
-        let isAtMaxRepeats = !beats.slice(previousIndex, previousIndex + maxRepeats + 1).some(beat => !beat.active);
-        let isAtMaxRests = !beats.slice(previousIndex, previousIndex + maxRests).some(beat => beat.active);
+        const previousIndex = idx + 1;
+        const isAtMaxRepeats = !beats.slice(previousIndex, previousIndex + maxRepeats + 1).some(beat => !beat.active);
+        const isAtMaxRests = !beats.slice(previousIndex, previousIndex + maxRests).some(beat => beat.active);
         beats[idx] = ({ active: isAtMaxRests || (getCoinFlip() && !isAtMaxRepeats)});
       }
     }
@@ -333,9 +333,9 @@
   }
 
   function getNextStep(steps, maxRepeats, maxRests, isLineOfSymmetryBetweenBeats) {
-    let idx = steps.length;
-    let previousIndex = idx - 1;
-    let beatsToExamineForMaxRepeats = previousIndex - maxRepeats > 0
+    const idx = steps.length;
+    const previousIndex = idx - 1;
+    const beatsToExamineForMaxRepeats = previousIndex - maxRepeats > 0
       ? steps.slice(previousIndex - maxRepeats, idx)
       : [...steps]
           .reverse()
@@ -344,7 +344,7 @@
               idx,
             ))
           .slice(-maxRepeats);
-    let beatsToExamineForMaxRests = idx - maxRests >= 0
+    const beatsToExamineForMaxRests = idx - maxRests >= 0
       ? steps.slice(idx - maxRests, idx)
       : [...steps]
           .reverse()
@@ -353,8 +353,8 @@
             idx,
           ))
           .slice(-maxRests);
-    let isAtMaxRepeats = steps[previousIndex].active && !beatsToExamineForMaxRepeats.some(beat => !beat.active);
-    let isAtMaxRests = !steps[previousIndex].active && !beatsToExamineForMaxRests.some(beat => beat.active);
+    const isAtMaxRepeats = steps[previousIndex].active && !beatsToExamineForMaxRepeats.some(beat => !beat.active);
+    const isAtMaxRests = !steps[previousIndex].active && !beatsToExamineForMaxRests.some(beat => beat.active);
     return { active: isAtMaxRests || (getCoinFlip() && !isAtMaxRepeats) };
   }
 
@@ -368,8 +368,8 @@
   function genRhythmForEvenCountWithOnBeatSymmetry(maxRests, maxRepeats, beatCount) {
     // var beats = [];
     // for (var idx = 0; idx < beatCount; idx++) {
-    //   let isAtMaxRests = maxRestsReached(beats, idx, maxRests - 1);
-    //   let isAtMaxRepeats = maxRepeatsReached(beats, idx, maxRepeats);
+    //   const isAtMaxRests = maxRestsReached(beats, idx, maxRests - 1);
+    //   const isAtMaxRepeats = maxRepeatsReached(beats, idx, maxRepeats);
     //   beats.push({ active: isAtMaxRests || (getCoinFlip() && !isAtMaxRepeats)});
     // }
     // return beats;
@@ -404,7 +404,6 @@
     var beats = Array(beatCount);
     var lastIndex = beatCount - 1;
     for (var idx = 0; idx < beatCount; idx++) {
-
       // first step
       if (idx === 0) {
         beats[0] = { 
@@ -431,8 +430,8 @@
           }
           examinationIndex--;
         }
-        let totalPossibleRepeats = (numberOfPreviousActiveSteps * 2);
-        let totalPossibleRests = (numberOfPreviousRests * 2) + 2;
+        const totalPossibleRepeats = (numberOfPreviousActiveSteps * 2);
+        const totalPossibleRests = (numberOfPreviousRests * 2) + 2;
         if (totalPossibleRepeats <= maxRepeats && totalPossibleRests <= maxRests) {
           beats[idx] = getCoinFlip();
         } else if (totalPossibleRepeats <= maxRepeats) {
@@ -449,25 +448,25 @@
 
       // any other step
       } else {
-        let previousIndex = idx - 1;
-        let maxRepeatsIndex = Math.max(previousIndex - maxRepeats, 0);
-        let beatsToExamineForMaxRepeats = previousIndex - maxRepeats > 0
+        const previousIndex = idx - 1;
+        const maxRepeatsIndex = Math.max(previousIndex - maxRepeats, 0);
+        const beatsToExamineForMaxRepeats = previousIndex - maxRepeats > 0
           ? beats.slice(maxRepeatsIndex, idx)
           : beats
               .slice(maxRepeatsIndex, idx)
               .reverse()
               .concat(beats.slice(maxRepeatsIndex, idx))
               .slice(-maxRepeats);
-        let maxRestsIndex = Math.max(idx - maxRests, 0);
-        let beatsToExamineForMaxRests = idx - maxRests >= 0
+        const maxRestsIndex = Math.max(idx - maxRests, 0);
+        const beatsToExamineForMaxRests = idx - maxRests >= 0
           ? beats.slice(maxRestsIndex, idx)
           : beats
               .slice(maxRestsIndex, idx)
               .reverse()
               .concat(beats.slice(maxRestsIndex, idx))
               .slice(-maxRests);
-        let isAtMaxRepeats = beats[previousIndex].active && !beatsToExamineForMaxRepeats.some(beat => !beat.active);
-        let isAtMaxRests = !beats[previousIndex].active && !beatsToExamineForMaxRests.some(beat => beat.active);
+        const isAtMaxRepeats = beats[previousIndex].active && !beatsToExamineForMaxRepeats.some(beat => !beat.active);
+        const isAtMaxRests = !beats[previousIndex].active && !beatsToExamineForMaxRests.some(beat => beat.active);
         beats[idx] = { active: isAtMaxRests || (getCoinFlip() && !isAtMaxRepeats)};
       }
     }
@@ -498,7 +497,7 @@
 
     // create second half of rhythm
     for (var idx = 0; idx < halfBeatCount; idx++) {
-      let index = halfBeatCount + idx + oddNumberOfBeats;
+      const index = halfBeatCount + idx + oddNumberOfBeats;
       // Determine middle beat of a rhythm with an even count and on beat symmetry
       if (idx === 0 && !oddNumberOfBeats && !isLineOfSymmetryBetweenBeats) {
         var numberOfBeatsToExamine = maxRepeats === 0
@@ -517,7 +516,7 @@
           }
         }
       } else {
-        let mirrorBeatIndex = halfBeatCount - idx - isLineOfSymmetryBetweenBeats;
+        const mirrorBeatIndex = halfBeatCount - idx - isLineOfSymmetryBetweenBeats;
         beats[index] = beats[mirrorBeatIndex];
       }
     }
@@ -542,8 +541,8 @@
    * @param {HTMLElement} cycle
    */
   function addBeatElements(beats, cycle) {
-    let beatElements = beats.map((_beat, idx) => {
-      let beatElement = document.createElement('div');
+    const beatElements = beats.map((_beat, idx) => {
+      const beatElement = document.createElement('div');
       beatElement.setAttribute(
         'class',
         isBeatActive(idx)
@@ -551,10 +550,10 @@
           : 'beat'
       );
       
-      let rotationDegrees = (idx * (360 / state.beats.length)) + 'deg';
+      const rotationDegrees = (idx * (360 / state.beats.length)) + 'deg';
       beatElement.style.transform = `rotate(${rotationDegrees}) translateY(-50%)`;
 
-      let beatMarker = document.createElement('div');
+      const beatMarker = document.createElement('div');
       beatMarker.setAttribute('class', 'beatMarker');
       beatElement.append(beatMarker);
 
@@ -568,35 +567,35 @@
   }
 
   function layoutBeats() {
-    let cycle = document.getElementById('cycle');
+    const cycle = document.getElementById('cycle');
     removeHTMLCollection(document.getElementsByClassName('beat'));
     addBeatElements(state.beats, cycle);
     saveReferencesToElements(); // must be called last
   }
 
   function enableOffbeatSymmetryCheckboxIfNeeded() {
-    let offbeatSymmetry = document.getElementById('offbeatSymmetry');
+    const offbeatSymmetry = document.getElementById('offbeatSymmetry');
     if (state.allowOffbeatSymmetry) {
       offbeatSymmetry.checked = true;
     } else {
       offbeatSymmetry.checked = false;
     }
     offbeatSymmetry.disabled = false;
-    let label = offbeatSymmetry.previousElementSibling;
+    const label = offbeatSymmetry.previousElementSibling;
     label.removeAttribute('class');
   }
 
   function disableOffbeatSymmetryCheckbox() {
-    let offbeatSymmetry = document.getElementById('offbeatSymmetry');
+    const offbeatSymmetry = document.getElementById('offbeatSymmetry');
     offbeatSymmetry.checked = false;
     offbeatSymmetry.disabled = true;
-    let label = offbeatSymmetry.previousElementSibling;
+    const label = offbeatSymmetry.previousElementSibling;
     label.setAttribute('class', 'disabled');
   }
 
   function adjustMaxRestsIfNeeded() {
     if (state.beats.length % 2 && parseInt(document.getElementById('maxRepeats').value) === 0) {
-      let maxRests = document.getElementById('maxRests');
+      const maxRests = document.getElementById('maxRests');
       if (parseInt(maxRests.value) === 1) {
         maxRests.value = 2;
       }
@@ -605,7 +604,7 @@
 
   function adjustMaxRepeatsIfNeeded() {
     if (state.beats.length % 2 && parseInt(document.getElementById('maxRests').value) === 1) {
-      let maxRepeats = document.getElementById('maxRepeats');
+      const maxRepeats = document.getElementById('maxRepeats');
       if (parseInt(maxRepeats.value) === 0) {
         maxRepeats.value = 1;
       }
@@ -621,7 +620,7 @@
   }
 
   function adjustRotationOfLinesOfSymmetry(isLineOfSymmetryBetweenBeats) {
-    let degrees = isLineOfSymmetryBetweenBeats
+    const degrees = isLineOfSymmetryBetweenBeats
       ? -(360 / state.beats.length) / 2
       : 0;
     document.getElementById('symmetry').style.transform = `rotate(${degrees}deg)`;
@@ -636,14 +635,14 @@
    * @param {MIDIOutputMap} outputs 
    */
   function updatePortSelectorOptions(outputs) {
-    let portSelector = document.getElementById('midiOutputPort');
+    const portSelector = document.getElementById('midiOutputPort');
     for (child of portSelector.children) {
       child.remove();
     }
     if (outputs.size) {
       for (output of outputs.values()) {
-        let option = document.createElement("option");
-        let name = output.name.length < 15
+        const option = document.createElement("option");
+        const name = output.name.length < 15
           ? output.name
           : output.name.slice(0, 15) + '...';
         option.text = name;
@@ -651,7 +650,7 @@
         portSelector.add(option);
       }
     } else {
-      let option = document.createElement("option");
+      const option = document.createElement("option");
       option.text = 'NONE';
       portSelector.add(option);
     }
@@ -698,12 +697,12 @@
    * @param {integer} noteDuration Length of time between note-on and note-off messages. 
    */
   function sendNote(noteDuration) {
-    let noteOnMessage = [
+    const noteOnMessage = [
       MIDI_NOTE_ON + state.midiChannel - 1, 
       noteNumber, 
       0x7f,
     ];
-    let noteOffMessage = [
+    const noteOffMessage = [
       MIDI_NOTE_OFF + state.midiChannel - 1,
       noteNumber,
       0x00,
@@ -717,8 +716,8 @@
    * @param {integer} beatLength Full length of the beat in milliseconds.
    */
   function sendClock(beatLength) {
-    let clockTime = Math.floor(beatLength / state.midiClockMessagesPerStep);
-    let now = window.performance.now();
+    const clockTime = Math.floor(beatLength / state.midiClockMessagesPerStep);
+    const now = window.performance.now();
     for (var i = 0; i < state.midiClockMessagesPerStep; i++) {
       if (i === 0) {
         state.midiOutput?.send([MIDI_CLOCK]);
@@ -736,17 +735,14 @@
    */
   function playBeatAtIndex(idx, beatLength) {
     sendClock(beatLength);
-    let prevIdx = getPreviousBeatIndex(idx);
-    let prevBeatMarker = state.beatMarkers[prevIdx];
-    if (!prevBeatMarker) {
-      console.log('idx', idx, 'prevIdx', prevIdx);
-    }
+    const prevIdx = getPreviousBeatIndex(idx);
+    const prevBeatMarker = state.beatMarkers[prevIdx];
     prevBeatMarker.classList.remove('playing');
     state.beatMarkers[idx].classList.add('playing');
     state.currentBeatIndex = idx;
 
     if (state.beats[idx].active) {  
-      let duration = beatLength / 2;
+      const duration = beatLength / 2;
       sendNote(duration);
       state.beatElements[idx].classList.add('playing');
       window.setTimeout(() => {
@@ -756,8 +752,8 @@
   }
 
   // function correctLoop(idx, beatLength) {
-  //   let timeSinceLastCorrection = window.performance.now() - state.lastCorrectionTime;
-  //   let correction = timeSinceLastCorrection % beatLength;
+  //   const timeSinceLastCorrection = window.performance.now() - state.lastCorrectionTime;
+  //   const correction = timeSinceLastCorrection % beatLength;
   //   beatLength = 
   //     correction < beatLength / 2 
   //     ? beatLength + correction 
@@ -905,10 +901,10 @@
 
   function handleGenerateButtonClicked(e) {
     clearBeats();
-    let beatCount = parseInt(document.getElementById('beats').value);
+    const beatCount = parseInt(document.getElementById('beats').value);
     addBeats(beatCount);
-    let maxRests = parseInt(document.getElementById('maxRests').value);
-    let maxRepeats = parseInt(document.getElementById('maxRepeats').value);
+    const maxRests = parseInt(document.getElementById('maxRests').value);
+    const maxRepeats = parseInt(document.getElementById('maxRepeats').value);
     updateBeats(maxRests, maxRepeats);
     layoutBeats();
   }
@@ -918,15 +914,15 @@
       stopSequencer();
     }
     clearBeats();
-    let beatCount = parseInt(document.getElementById('beats').value);
+    const beatCount = parseInt(document.getElementById('beats').value);
     addBeats(beatCount);
     layoutBeats();
   }
 
   function enableOrDisableOffbeatSymmetryIfNeeded() {
-    let beatCount = state.beats.length;
-    let maxRests = parseInt(document.getElementById('maxRests').value);
-    let maxRepeats = parseInt(document.getElementById('maxRepeats').value);
+    const beatCount = state.beats.length;
+    const maxRests = parseInt(document.getElementById('maxRests').value);
+    const maxRepeats = parseInt(document.getElementById('maxRepeats').value);
     if (shouldAllowOffbeatSymmetry(beatCount, maxRests, maxRepeats)) {
       state.allowOffbeatSymmetry = true;
       enableOffbeatSymmetryCheckboxIfNeeded();
@@ -941,7 +937,7 @@
     if (path.includes(state.cycleElement)) {
       return;
     }
-    let radians = Math.atan2(e.y - state.centerY, e.x - state.centerX);
+    const radians = Math.atan2(e.y - state.centerY, e.x - state.centerX);
     state.degrees = radians * (180 / Math.PI);
     state.pointerDown = true;
   }
@@ -1031,7 +1027,7 @@
    * @param {MIDIConnectionEvent} e 
    */
   function handleMidiStateChange(e) {
-    // let port = e.port;
+    // const port = e.port;
     // // Print information about the (dis)connected MIDI controller
     // alert(
     //   port.name + '\n' + 
@@ -1039,7 +1035,7 @@
     //   'MIDIPortDeviceState: ' + port.state + '\n' +
     //   'MIDIPortConnectionState: ' + port.connection
     // );
-    let access = state.midiAccess;
+    const access = state.midiAccess;
     updatePortSelectorOptions(access);
     if (access.outputs.values().size) {
       state.midiPortID = access.outputs.values().next().value.id;
